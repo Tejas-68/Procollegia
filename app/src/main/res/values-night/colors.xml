@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Mode Neumorphic System -->
+    <color name="neumorph_bg">#1E2B3C</color>
+    <color name="neumorph_bg_dark">#141D29</color>
+    <color name="neumorph_surface">#223246</color>
+    <color name="neumorph_shadow_light">#2A3B52</color>
+    <color name="neumorph_shadow_dark">#121A24</color>
+
+    <color name="text_primary">#E2E8F0</color>
+    <color name="text_secondary">#A0AEC0</color>
+    <color name="text_muted">#718096</color>
+    <color name="text_on_accent">#FFFFFF</color>
+
+    <color name="divider">#121A24</color>
+    <color name="border_light">#2D3748</color>
+</resources>

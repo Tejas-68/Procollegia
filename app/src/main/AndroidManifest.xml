@@ -50,6 +50,9 @@
         <activity android:name=".TournamentRegistrationActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".CreateTournamentActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".TournamentRecipientActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".TeacherInternalsActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".HodSubjectAssignmentActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".TimetableUploadActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".MainActivity"

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/neumorph_bg">
+
+    <!-- ── Header ── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="40dp"
+        android:paddingBottom="16dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sports"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tournaments &amp; Equipment"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:gravity="center"
+            android:textSize="26sp"
+            android:text="⚽"
+            android:background="@drawable/bg_neumorph_circle" />
+    </LinearLayout>
+
+    <!-- ── Top Nav Pill Tabs ── -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:paddingBottom="16dp"
+        android:scrollbars="none"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:id="@+id/llSportsTabBar"
+            android:layout_width="wrap_content"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_neumorph_card"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="5dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tabTournaments"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Tournaments"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingHorizontal="18dp"
+                android:background="@drawable/bg_pill_active"
+                android:textColor="@color/text_on_accent" />
+
+            <TextView
+                android:id="@+id/tabBorrow"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Borrow"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingHorizontal="18dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_pill_inactive"
+                android:textColor="@color/text_secondary" />
+
+            <TextView
+                android:id="@+id/tabMyItems"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="My Items"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingHorizontal="18dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_pill_inactive"
+                android:textColor="@color/text_secondary" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- ── Content Area (swapped by tab selection) ── -->
+    <FrameLayout
+        android:id="@+id/flSportsContent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

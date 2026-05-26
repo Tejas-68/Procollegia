@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_neumorph_card_sm"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="16dp"
+    android:layout_marginBottom="12dp">
+
+    <!-- Avatar -->
+    <ImageView
+        android:id="@+id/ivStudentAvatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_neumorph_circle"
+        android:src="@drawable/ic_person"
+        android:padding="12dp" />
+
+    <!-- Info -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp">
+        <TextView
+            android:id="@+id/tvStudentName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tejas N C"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvRollNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Roll: 101"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvOnLeaveLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ON LEAVE"
+        android:textColor="@color/text_muted"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:paddingHorizontal="4dp"
+        android:visibility="gone" />
+
+    <!-- A | P Toggle Group (Shifted: Absent Left, Present Right) -->
+    <LinearLayout
+        android:id="@+id/llToggleGroup"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_neumorph_card_sm"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="2dp">
+        
+        <TextView
+            android:id="@+id/tvStatusA"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="A"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_secondary" />
+
+        <TextView
+            android:id="@+id/tvStatusP"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="P"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_secondary" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -10,6 +10,11 @@ android {
     defaultConfig {
         applicationId = "com.procollegia"
         minSdk = 26
+
+
+
+
+
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -62,6 +67,9 @@ dependencies {
     // ML Kit Barcode Scanning
     implementation("com.google.mlkit:barcode-scanning:17.2.0")
 
+    // ML Kit Text Recognition
+    implementation("com.google.mlkit:text-recognition:16.0.1")
+
     // Paging 3
     implementation("androidx.paging:paging-runtime:3.2.1")
     implementation("androidx.concurrent:concurrent-futures:1.1.0")
@@ -75,6 +83,12 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-messaging")
+    implementation("com.google.firebase:firebase-storage")
+
+    // Image Loading
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+    implementation("com.github.chrisbanes:PhotoView:2.3.0")
 
     // PDF generation
     implementation("com.itextpdf:itext7-core:7.2.5")

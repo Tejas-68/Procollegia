@@ -91,6 +91,9 @@
         <item name="android:backgroundTint">@android:color/transparent</item>
     </style>
 
+    <!-- Solid filled button (alias for Primary) -->
+    <style name="ProCollegia.Button.Solid" parent="ProCollegia.Button.Primary" />
+
     <style name="ProCollegia.Button.Outline.Small" parent="ProCollegia.Button.Outline">
         <item name="android:paddingTop">4dp</item>
         <item name="android:paddingBottom">4dp</item>

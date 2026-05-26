@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.procollegia.utils.InputValidator;
 
 import java.util.HashMap;
 
@@ -87,26 +88,26 @@ public class RegisterActivity extends AppCompatActivity {
             String loginCode = etLoginCode.getText().toString().trim();
 
             // ── Validations ──
-            if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Please fill in all personal details", Toast.LENGTH_SHORT).show();
+            if (!InputValidator.arePersonalDetailsValid(name, phone, email, password)) {
+                Toast.makeText(this, "Please fill in all personal details correctly", Toast.LENGTH_SHORT).show();
                 switchToPersonal();
                 return;
             }
 
             // Students must supply their UUCMS ID
-            if (selectedRole.equals("Student") && uucms.isEmpty()) {
+            if (selectedRole.equals("Student") && !InputValidator.isValidUucmsId(uucms)) {
                 Toast.makeText(this, "UUCMS ID is mandatory for students", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             // Validate institution login code
-            if (loginCode.isEmpty()) {
-                Toast.makeText(this, "Please enter the institution login code", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (!loginCode.equals(INSTITUTION_LOGIN_CODE)) {
-                Toast.makeText(this, "Invalid login code. Contact your institution.", Toast.LENGTH_LONG).show();
-                etLoginCode.setError("Invalid code");
+            if (!InputValidator.isValidLoginCode(loginCode, INSTITUTION_LOGIN_CODE)) {
+                if (loginCode.isEmpty()) {
+                    Toast.makeText(this, "Please enter the institution login code", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Invalid login code. Contact your institution.", Toast.LENGTH_LONG).show();
+                    etLoginCode.setError("Invalid code");
+                }
                 return;
             }
 
@@ -125,15 +126,14 @@ public class RegisterActivity extends AppCompatActivity {
                         userMap.put("phone", phone);
                         userMap.put("email", email);
                         userMap.put("role", selectedRole);
-                        userMap.put("uucmsId", uucms);   // Standardised key
+                        userMap.put("uucmsId", uucms);
                         userMap.put("department", course);
                         userMap.put("year", selectedYear);
                         userMap.put("semester", sem);
+                        userMap.put("section", "Sec A");
 
                         if (selectedRole.equals("Student")) {
-                            userMap.put("honorScore", 500);
-                            userMap.put("section", "Sec A"); // Default for now
-                        }
+                            userMap.put("honorScore", 500);}
 
                         FirebaseFirestore.getInstance().collection("users").document(uid).set(userMap)
                             .addOnSuccessListener(aVoid -> {
@@ -147,6 +147,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     intent = new Intent(RegisterActivity.this, HodDashboardActivity.class);
                                 } else if (selectedRole.equals("PT Admin")) {
                                     intent = new Intent(RegisterActivity.this, PtAdminDashboardActivity.class);
+                                } else if (selectedRole.equals("Principal")) {
+                                    intent = new Intent(RegisterActivity.this, PrincipalDashboardActivity.class);
                                 } else {
                                     intent = new Intent(RegisterActivity.this, StudentDashboardActivity.class);
                                 }

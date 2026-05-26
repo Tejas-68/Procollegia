@@ -7,7 +7,6 @@
     android:background="@color/neumorph_bg"
     tools:context=".TeacherDashboardActivity">
 
-    <!-- Fragment Container hosting the internal content -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
         android:layout_width="0dp"
@@ -17,7 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Neumorphic specific container for the Bottom Navigation -->
     <FrameLayout
         android:id="@+id/navContainer"
         android:layout_width="0dp"

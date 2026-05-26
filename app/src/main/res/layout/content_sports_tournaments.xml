@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- content_sports_tournaments.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Shimmer -->
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerTournaments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="8dp">
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical">
+            <View android:layout_width="match_parent" android:layout_height="140dp"
+                android:background="@drawable/bg_neumorph_card_sm" android:layout_marginBottom="12dp"/>
+            <View android:layout_width="match_parent" android:layout_height="140dp"
+                android:background="@drawable/bg_neumorph_card_sm" android:layout_marginBottom="12dp"/>
+            <View android:layout_width="match_parent" android:layout_height="140dp"
+                android:background="@drawable/bg_neumorph_card_sm"/>
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <!-- List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTournaments"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="24dp"
+        android:clipToPadding="false"
+        android:nestedScrollingEnabled="false"
+        android:visibility="gone" />
+
+    <!-- Empty -->
+    <LinearLayout
+        android:id="@+id/llNoTournaments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="48dp"
+        android:visibility="gone">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="🏆" android:textSize="48sp" android:layout_marginBottom="12dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="No tournaments right now"
+            android:textColor="@color/text_primary" android:textSize="16sp" android:textStyle="bold"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Check back soon!"
+            android:textColor="@color/text_muted" android:textSize="13sp" android:layout_marginTop="4dp"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,44 @@
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Android Studio generated files
+.idea/
+*.iml
+*.apk
+*.ap_
+*.dex
+*.class
+*.jar
+*.zip
+
+# Generated files
+bin/
+gen/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*~
+*.swp
+*.swo
+
+# Build outputs
+app/build/
+
+# Google Services
+# Uncomment if you want to keep google-services.json in repo
+# google-services.json
+
+# Firebase
+google-services.json
+
+# Gradle wrapper
+!gradle/wrapper/gradle-wrapper.jar
+!gradlew
+!gradlew.bat

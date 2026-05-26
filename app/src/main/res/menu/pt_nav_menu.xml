@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_nav_home"
+        android:title="Home" />
+    <item
+        android:id="@+id/nav_inventory"
+        android:icon="@drawable/ic_nav_sports"
+        android:title="Equipments" />
+    <item
+        android:id="@+id/nav_tournament"
+        android:icon="@drawable/ic_trophy"
+        android:title="Events" />
+    <item
+        android:id="@+id/nav_honor"
+        android:icon="@drawable/ic_star"
+        android:title="Honors" />
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_nav_profile"
+        android:title="Profile" />
+</menu>

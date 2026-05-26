@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/neumorph_bg">
+
+    <!-- Header -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Academics"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:paddingTop="36dp"
+        android:paddingBottom="20dp" />
+
+    <!-- Pill Tab Bar -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:scrollbars="none"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:id="@+id/llTabBar"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_neumorph_card"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="5dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tabInternalMarks"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Internal Marks"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/bg_pill_active"
+                android:textColor="@color/text_on_accent" />
+
+            <TextView
+                android:id="@+id/tabHonorScore"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Honor Score"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_pill_inactive"
+                android:textColor="@color/text_secondary" />
+
+            <TextView
+                android:id="@+id/tabTimetable"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Timetable"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_pill_inactive"
+                android:textColor="@color/text_secondary" />
+
+            <TextView
+                android:id="@+id/tabFeedback"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Feedback"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_pill_inactive"
+                android:textColor="@color/text_secondary" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Content Area -->
+    <FrameLayout
+        android:id="@+id/flAcademicsContent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

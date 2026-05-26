@@ -3,7 +3,12 @@ package com.procollegia;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.procollegia.fragments.TeacherAttendanceFragment;
@@ -19,6 +24,12 @@ public class TeacherDashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_dashboard);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {}).launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
 

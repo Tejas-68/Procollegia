@@ -62,7 +62,7 @@
                 android:layout_height="50dp"
                 android:background="@drawable/bg_neumorph_input"
                 android:paddingHorizontal="16dp"
-                android:hint="user@college.edu"
+                android:hint="Email or UUCMS ID"
                 android:textColorHint="@color/text_muted"
                 android:textColor="@color/text_primary"
                 android:inputType="textEmailAddress"

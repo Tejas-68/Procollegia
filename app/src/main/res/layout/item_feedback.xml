@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Past feedback item row -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_neumorph_card_sm"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_marginBottom="10dp">
+
+    <!-- Top row: category chip + date -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/tvFeedbackCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Complaint"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@color/accent_blue"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="3dp"
+            android:background="@drawable/bg_chip_selected" />
+
+        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvFeedbackDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mar 18"
+            android:textSize="12sp"
+            android:textColor="@color/text_muted" />
+    </LinearLayout>
+
+    <!-- Subject -->
+    <TextView
+        android:id="@+id/tvFeedbackSubject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Classroom projector not working"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <!-- Message preview -->
+    <TextView
+        android:id="@+id/tvFeedbackPreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="The projector in Room 204 has been broken for 3 days..."
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_marginTop="4dp" />
+
+    <!-- Status badge -->
+    <TextView
+        android:id="@+id/tvFeedbackStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pending"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:textColor="@color/accent_gold_dark"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="3dp"
+        android:background="@drawable/bg_badge_green"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>

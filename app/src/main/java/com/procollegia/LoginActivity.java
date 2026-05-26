@@ -42,18 +42,42 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        String email = etEmail.getText().toString().trim();
+        String emailOrUucms = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
-        if (email.isEmpty() || password.isEmpty()) {
+        if (emailOrUucms.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Please enter all details", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // --- PRODUCTION FIREBASE LOGIN ---
         progressBar.setVisibility(View.VISIBLE);
         btnLogin.setEnabled(false);
 
+        if (!emailOrUucms.contains("@")) {
+            // Treat as UUCMS ID, lookup email
+            FirebaseFirestore.getInstance().collection("users")
+                .whereEqualTo("uucmsId", emailOrUucms)
+                .limit(1)
+                .get()
+                .addOnSuccessListener(qs -> {
+                    if (!qs.isEmpty()) {
+                        String email = qs.getDocuments().get(0).getString("email");
+                        if (email != null && !email.isEmpty()) {
+                            performFirebaseAuth(email, password);
+                        } else {
+                            showLoginError("No email associated with this UUCMS ID");
+                        }
+                    } else {
+                        showLoginError("UUCMS ID not found");
+                    }
+                })
+                .addOnFailureListener(e -> showLoginError("Lookup failed: " + e.getMessage()));
+        } else {
+            performFirebaseAuth(emailOrUucms, password);
+        }
+    }
+
+    private void performFirebaseAuth(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -87,16 +111,16 @@ public class LoginActivity extends AppCompatActivity {
                                 mAuth.signOut();
                             }
                         })
-                        .addOnFailureListener(e -> {
-                            progressBar.setVisibility(View.GONE);
-                            btnLogin.setEnabled(true);
-                            Toast.makeText(LoginActivity.this, "Error fetching details: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                        });
+                        .addOnFailureListener(e -> showLoginError("Error fetching details: " + e.getMessage()));
                 } else {
-                    progressBar.setVisibility(View.GONE);
-                    btnLogin.setEnabled(true);
-                    Toast.makeText(LoginActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    showLoginError("Error: " + task.getException().getMessage());
                 }
             });
+    }
+
+    private void showLoginError(String message) {
+        progressBar.setVisibility(View.GONE);
+        btnLogin.setEnabled(true);
+        Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
     }
 }

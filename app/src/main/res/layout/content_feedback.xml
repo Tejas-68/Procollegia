@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/neumorph_bg"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingBottom="40dp">
+
+        <!-- ── Category chips ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Type"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:letterSpacing="0.08"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:clipToPadding="false"
+            android:layout_marginBottom="20dp">
+
+            <LinearLayout
+                android:id="@+id/llCategoryChips"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Chips are added programmatically via inflateChip() in the fragment -->
+                <TextView android:id="@+id/chipComplaint"
+                    android:layout_width="wrap_content" android:layout_height="match_parent"
+                    android:text="Complaint" android:gravity="center"
+                    android:textSize="13sp" android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
+                    android:background="@drawable/bg_chip_selected"
+                    android:textColor="@color/accent_blue" />
+
+                <TextView android:id="@+id/chipFeedback"
+                    android:layout_width="wrap_content" android:layout_height="match_parent"
+                    android:text="💬  Feedback" android:gravity="center"
+                    android:textSize="13sp" android:textStyle="bold"
+                    android:paddingHorizontal="16dp" android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_chip_unselected"
+                    android:textColor="@color/text_secondary" />
+
+                <TextView android:id="@+id/chipSuggestion"
+                    android:layout_width="wrap_content" android:layout_height="match_parent"
+                    android:text="Suggestion" android:gravity="center"
+                    android:textSize="13sp" android:textStyle="bold"
+                    android:paddingHorizontal="16dp" android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_chip_unselected"
+                    android:textColor="@color/text_secondary" />
+
+                <TextView android:id="@+id/chipQuery"
+                    android:layout_width="wrap_content" android:layout_height="match_parent"
+                    android:text="❓  Query" android:gravity="center"
+                    android:textSize="13sp" android:textStyle="bold"
+                    android:paddingHorizontal="16dp" android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_chip_unselected"
+                    android:textColor="@color/text_secondary" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- ── To (recipient) ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send To"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="8dp" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:clipToPadding="false"
+            android:layout_marginBottom="20dp">
+
+            <LinearLayout
+                android:id="@+id/llRecipientChips"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView android:id="@+id/chipToHOD"
+                    android:layout_width="wrap_content" android:layout_height="match_parent"
+                    android:text="HOD" android:gravity="center"
+                    android:textSize="13sp" android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
+                    android:background="@drawable/bg_chip_selected"
+                    android:textColor="@color/accent_blue" />
+
+                <TextView android:id="@+id/chipToTeacher"
+                    android:layout_width="wrap_content" android:layout_height="match_parent"
+                    android:text="Class Teacher" android:gravity="center"
+                    android:textSize="13sp" android:textStyle="bold"
+                    android:paddingHorizontal="16dp" android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_chip_unselected"
+                    android:textColor="@color/text_secondary" />
+
+                <TextView android:id="@+id/chipToPrincipal"
+                    android:layout_width="wrap_content" android:layout_height="match_parent"
+                    android:text="Principal" android:gravity="center"
+                    android:textSize="13sp" android:textStyle="bold"
+                    android:paddingHorizontal="16dp" android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_chip_unselected"
+                    android:textColor="@color/text_secondary" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- ── Subject ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subject"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/etFeedbackSubject"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:hint="e.g. Projector not working in Room 204..."
+            android:textColorHint="@color/text_muted"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/bg_neumorph_input"
+            android:paddingHorizontal="16dp"
+            android:textSize="14sp"
+            android:inputType="text"
+            android:maxLines="1"
+            android:layout_marginBottom="20dp" />
+
+        <!-- ── Message ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Message"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/etFeedbackMessage"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:hint="Describe the issue or feedback in detail..."
+            android:gravity="top|start"
+            android:textColorHint="@color/text_muted"
+            android:textColor="@color/text_primary"
+            android:background="@drawable/bg_neumorph_input"
+            android:padding="16dp"
+            android:textSize="14sp"
+            android:inputType="textMultiLine"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Char counter -->
+        <TextView
+            android:id="@+id/tvCharCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 / 500"
+            android:textSize="11sp"
+            android:textColor="@color/text_muted"
+            android:layout_gravity="end"
+            android:layout_marginBottom="24dp" />
+
+        <!-- ── Anonymous toggle ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_neumorph_card_sm"
+            android:paddingHorizontal="16dp"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="🕵️  Submit anonymously"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchAnonymous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false" />
+        </LinearLayout>
+
+        <!-- ── Submit button ── -->
+        <TextView
+            android:id="@+id/btnSubmitFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:gravity="center"
+            android:text="Submit"
+            android:textColor="@color/text_on_accent"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_pill_active"
+            android:layout_marginBottom="32dp" />
+
+        <!-- ── Past submissions ── -->
+        <TextView
+            android:id="@+id/tvPastHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Past Submissions"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp"
+            android:visibility="gone" />
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="vertical">
+                <View android:layout_width="match_parent" android:layout_height="90dp"
+                    android:background="@drawable/bg_neumorph_card_sm" android:layout_marginBottom="10dp"/>
+                <View android:layout_width="match_parent" android:layout_height="90dp"
+                    android:background="@drawable/bg_neumorph_card_sm"/>
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPastFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -47,7 +47,6 @@ public class StudentDashboardActivity extends AppCompatActivity {
             return true;
         });
 
-        // Load the home fragment by default
         if (savedInstanceState == null) {
             bottomNav.setSelectedItemId(R.id.nav_home);
         }
