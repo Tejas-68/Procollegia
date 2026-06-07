@@ -21,8 +21,7 @@
             android:id="@+id/btnBack"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_nav_home"
-            android:rotation="-90"
+            android:src="@drawable/ic_back"
             app:tint="@color/text_primary"
             android:layout_marginEnd="16dp" />
 
@@ -34,19 +33,45 @@
             android:textColor="@color/text_primary"
             android:textSize="24sp"
             android:textStyle="bold" />
+
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvAutoSelectMock"
+    <!-- ── Period Spinner ── -->
+    <LinearLayout
+        android:id="@+id/llPeriodRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Auto-selected based on HOD Timetable"
-        android:textColor="@color/accent_blue"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:gravity="center"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toBottomOf="@id/llHeader" />
+        app:layout_constraintTop_toBottomOf="@id/llHeader">
+
+        <FrameLayout
+            android:id="@+id/flPeriod"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_neumorph_card_sm">
+
+            <Spinner
+                android:id="@+id/spinnerPeriod"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="12dp"
+                android:background="@null" />
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/btnConfigPeriods"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/bg_neumorph_circle"
+            android:padding="12dp"
+            android:src="@drawable/ic_edit"
+            app:tint="@color/accent_blue" />
+    </LinearLayout>
 
     <!-- ── Filter Row ── -->
     <LinearLayout
@@ -58,7 +83,8 @@
         android:paddingBottom="12dp"
         android:paddingTop="8dp"
         android:weightSum="3"
-        app:layout_constraintTop_toBottomOf="@id/tvAutoSelectMock">
+        app:layout_constraintTop_toBottomOf="@id/llPeriodRow">
+
 
         <FrameLayout
             android:layout_width="0dp"
@@ -139,8 +165,33 @@
         android:orientation="vertical"
         android:background="@color/neumorph_bg"
         android:elevation="8dp"
-        android:padding="20dp"
+        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- 5 PM / cooldown banner -->
+        <TextView
+            android:id="@+id/tvBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/accent_red"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="6dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvCooldown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/accent_orange"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvAttendanceSummary"
@@ -151,12 +202,12 @@
             android:textColor="@color/text_primary"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="12dp" />
 
         <Button
             android:id="@+id/btnSubmitAttendance"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="56dp"
             android:text="Submit Attendance"
             style="@style/ProCollegia.Button.Primary" />
     </LinearLayout>
@@ -169,6 +220,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Camera FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnScan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_camera"
+        app:tint="@color/text_on_accent"
+        app:backgroundTint="@color/accent_blue"
+        app:layout_constraintBottom_toTopOf="@id/llFooter"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

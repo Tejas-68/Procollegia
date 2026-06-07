@@ -79,7 +79,7 @@ public class BorrowedAdapter extends RecyclerView.Adapter<BorrowedAdapter.VH> {
                 break;
 
             case "returned":
-                h.tvStatus.setText("Returned ✓");
+                h.tvStatus.setText("Returned ");
                 h.tvStatus.setBackgroundResource(R.drawable.bg_badge_green);
                 h.tvStatus.setTextColor(ContextCompat.getColor(h.itemView.getContext(), R.color.text_muted));
                 h.btnReturn.setVisibility(View.GONE);

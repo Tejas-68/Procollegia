@@ -10,7 +10,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.procollegia.fragments.StudentAcademicsFragment;
 import com.procollegia.fragments.StudentAttendanceFragment;
 import com.procollegia.fragments.StudentHomeFragment;
-import com.procollegia.fragments.StudentProfileFragment;
+
 import com.procollegia.fragments.StudentSportsFragment;
 
 public class StudentDashboardActivity extends AppCompatActivity {
@@ -35,7 +35,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_sports) {
                 selectedFragment = new StudentSportsFragment();
             } else if (itemId == R.id.nav_profile) {
-                selectedFragment = new StudentProfileFragment();
+                selectedFragment = new com.procollegia.fragments.SharedProfileFragment();
             }
 
             if (selectedFragment != null) {

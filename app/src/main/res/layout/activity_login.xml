@@ -86,7 +86,18 @@
                 android:textColorHint="@color/text_muted"
                 android:textColor="@color/text_primary"
                 android:inputType="textPassword"
-                android:layout_marginBottom="32dp" />
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/tvForgotPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Forgot Password?"
+                android:textColor="@color/accent_blue"
+                android:textStyle="bold"
+                android:layout_gravity="end"
+                android:layout_marginBottom="24dp"
+                android:padding="4dp" />
 
             <Button
                 android:id="@+id/btnLogin"

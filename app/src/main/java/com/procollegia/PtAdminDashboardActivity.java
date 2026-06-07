@@ -8,7 +8,7 @@ import com.procollegia.fragments.PtHomeFragment;
 import com.procollegia.fragments.PtInventoryFragment;
 import com.procollegia.fragments.PtTournamentFragment;
 import com.procollegia.fragments.PtHonorScoreFragment;
-import com.procollegia.fragments.PtProfileFragment;
+
 
 public class PtAdminDashboardActivity extends AppCompatActivity {
 
@@ -32,7 +32,7 @@ public class PtAdminDashboardActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_honor) {
                 selectedFragment = new PtHonorScoreFragment();
             } else if (itemId == R.id.nav_profile) {
-                selectedFragment = new PtProfileFragment();
+                selectedFragment = new com.procollegia.fragments.SharedProfileFragment();
             }
 
             if (selectedFragment != null) {

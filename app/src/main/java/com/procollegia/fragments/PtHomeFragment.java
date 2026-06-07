@@ -56,6 +56,10 @@ public class PtHomeFragment extends Fragment {
             setupDashboard();
         }
 
+        root.findViewById(R.id.fabScanAttendance).setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), com.procollegia.PtAttendanceActivity.class));
+        });
+
         return root;
     }
 

@@ -51,7 +51,7 @@
 
                 <TextView android:id="@+id/chipFeedback"
                     android:layout_width="wrap_content" android:layout_height="match_parent"
-                    android:text="💬  Feedback" android:gravity="center"
+                    android:text="Feedback" android:gravity="center"
                     android:textSize="13sp" android:textStyle="bold"
                     android:paddingHorizontal="16dp" android:layout_marginStart="8dp"
                     android:background="@drawable/bg_chip_unselected"
@@ -67,7 +67,7 @@
 
                 <TextView android:id="@+id/chipQuery"
                     android:layout_width="wrap_content" android:layout_height="match_parent"
-                    android:text="❓  Query" android:gravity="center"
+                    android:text="Query" android:gravity="center"
                     android:textSize="13sp" android:textStyle="bold"
                     android:paddingHorizontal="16dp" android:layout_marginStart="8dp"
                     android:background="@drawable/bg_chip_unselected"
@@ -206,7 +206,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="🕵️  Submit anonymously"
+                android:text="️  Submit anonymously"
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
 

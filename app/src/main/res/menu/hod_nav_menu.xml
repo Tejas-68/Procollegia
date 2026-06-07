@@ -9,6 +9,10 @@
         android:icon="@drawable/ic_nav_academics"
         android:title="Academics" />
     <item
+        android:id="@+id/nav_hod_tournament"
+        android:icon="@drawable/ic_trophy"
+        android:title="Tournament" />
+    <item
         android:id="@+id/nav_hod_honor"
         android:icon="@drawable/ic_star"
         android:title="Honor" />

@@ -216,7 +216,7 @@ public class FeedbackFragment extends Fragment {
                     if (getActivity() == null) return;
                     getActivity().runOnUiThread(() -> {
                         Toast.makeText(getContext(),
-                                selectedCategory + " submitted successfully! ✓",
+                                selectedCategory + " submitted successfully! ",
                                 Toast.LENGTH_LONG).show();
 
                         // Clear form

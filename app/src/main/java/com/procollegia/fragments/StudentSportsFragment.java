@@ -155,7 +155,7 @@ public class StudentSportsFragment extends Fragment {
                                     doc.contains("joinedCount") && doc.contains("maxTeams") ? doc.getLong("joinedCount") + "/" + doc.getLong("maxTeams") : "—",
                                     "Trophy",
                                     "ongoing".equalsIgnoreCase(doc.getString("status")),
-                                    "🏆");
+                                    "");
                             
                             item.gameType = nvl(doc.getString("gameType"), "Solo");
                             item.maxPlayers = doc.contains("maxPlayers") ? doc.getLong("maxPlayers").intValue() : 1;
@@ -242,7 +242,7 @@ public class StudentSportsFragment extends Fragment {
                                     nvl(doc.getString("name"), "Equipment"),
                                     nvl(doc.getString("category"), "Sports"),
                                     avail,
-                                    nvl(doc.getString("emoji"), "🏅")));
+                                    nvl(doc.getString("emoji"), "")));
                         }
                     }
                     if (getActivity() != null)
@@ -294,7 +294,7 @@ public class StudentSportsFragment extends Fragment {
                         borrowed.add(new BorrowedAdapter.BorrowedItem(
                                 doc.getId(),
                                 nvl(doc.getString("equipmentName"),  "Equipment"),
-                                nvl(doc.getString("equipmentEmoji"), "🏅"),
+                                nvl(doc.getString("equipmentEmoji"), ""),
                                 nvl(doc.getString("borrowDate"),     "—"),
                                 nvl(doc.getString("status"),         "active")));
                     }
@@ -410,22 +410,22 @@ public class StudentSportsFragment extends Fragment {
 
     private void loadMockTournaments() {
         if (!tournaments.isEmpty()) return;
-        tournaments.add(new TournamentAdapter.TournamentItem("S1", "Inter-College Cricket",  "Cricket",    "College Ground", "Mar 20","8","Trophy",  true,  "🏏"));
-        tournaments.add(new TournamentAdapter.TournamentItem("S2", "Basketball Championship","Basketball", "Sports Hall",    "Apr 05","6","Medal",   false, "🏀"));
-        tournaments.add(new TournamentAdapter.TournamentItem("S3", "Badminton Open",         "Badminton",  "Indoor Court",   "Apr 15","12","Certificate",false,"🏸"));
+        tournaments.add(new TournamentAdapter.TournamentItem("S1", "Inter-College Cricket",  "Cricket",    "College Ground", "Mar 20","8","Trophy",  true,  ""));
+        tournaments.add(new TournamentAdapter.TournamentItem("S2", "Basketball Championship","Basketball", "Sports Hall",    "Apr 05","6","Medal",   false, ""));
+        tournaments.add(new TournamentAdapter.TournamentItem("S3", "Badminton Open",         "Badminton",  "Indoor Court",   "Apr 15","12","Certificate",false,""));
     }
 
     private void loadMockEquipment() {
         if (!equipment.isEmpty()) return;
         equipment.addAll(Arrays.asList(
-                new EquipmentAdapter.Equipment("1","Basketball",       "Ball Sports",   5, "🏀"),
-                new EquipmentAdapter.Equipment("2","Cricket Bat",      "Cricket",       3, "🏏"),
-                new EquipmentAdapter.Equipment("3","Badminton Racket", "Racket Sports", 8, "🏸"),
-                new EquipmentAdapter.Equipment("4","Football",         "Ball Sports",   4, "⚽"),
-                new EquipmentAdapter.Equipment("5","Table Tennis Bat", "TT",            0, "🏓"),
-                new EquipmentAdapter.Equipment("6","Volleyball",       "Ball Sports",   2, "🏐"),
-                new EquipmentAdapter.Equipment("7","Skipping Rope",    "Fitness",       10,"🪢"),
-                new EquipmentAdapter.Equipment("8","Boxing Gloves",    "Combat",        1, "🥊")
+                new EquipmentAdapter.Equipment("1","Basketball",       "Ball Sports",   5, ""),
+                new EquipmentAdapter.Equipment("2","Cricket Bat",      "Cricket",       3, ""),
+                new EquipmentAdapter.Equipment("3","Badminton Racket", "Racket Sports", 8, ""),
+                new EquipmentAdapter.Equipment("4","Football",         "Ball Sports",   4, ""),
+                new EquipmentAdapter.Equipment("5","Table Tennis Bat", "TT",            0, ""),
+                new EquipmentAdapter.Equipment("6","Volleyball",       "Ball Sports",   2, ""),
+                new EquipmentAdapter.Equipment("7","Skipping Rope",    "Fitness",       10,""),
+                new EquipmentAdapter.Equipment("8","Boxing Gloves",    "Combat",        1, "")
         ));
     }
 

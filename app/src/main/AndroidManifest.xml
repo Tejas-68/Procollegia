@@ -53,6 +53,9 @@
         <activity android:name=".TeacherInternalsActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".HodSubjectAssignmentActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".TimetableUploadActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".EditProfileActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".PtAttendanceActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".HodConfigurationActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".MainActivity"

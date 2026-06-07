@@ -101,7 +101,7 @@ public class HodLeaveRequestFragment extends Fragment {
         db.collection("leaveRequests").document(item.id)
                 .update("status", newStatus)
                 .addOnSuccessListener(v -> {
-                    String msg = "approved".equals(newStatus) ? "Leave approved ✓" : "Leave rejected";
+                    String msg = "approved".equals(newStatus) ? "Leave approved " : "Leave rejected";
                     Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
 
                     // If approved → update matching attendanceRecords to "L"

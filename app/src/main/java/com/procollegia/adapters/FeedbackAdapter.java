@@ -53,11 +53,11 @@ public class FeedbackAdapter extends RecyclerView.Adapter<FeedbackAdapter.VH> {
         // Status styling
         switch (f.status.toLowerCase()) {
             case "resolved":
-                h.tvStatus.setText("✓  Resolved");
+                h.tvStatus.setText("  Resolved");
                 h.tvStatus.setTextColor(0xFF38A169);
                 break;
             case "reviewed":
-                h.tvStatus.setText("👁  Reviewed");
+                h.tvStatus.setText("  Reviewed");
                 h.tvStatus.setTextColor(0xFF4A90D9);
                 break;
             default:

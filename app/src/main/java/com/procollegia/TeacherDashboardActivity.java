@@ -11,10 +11,10 @@ import android.os.Build;
 import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.procollegia.fragments.TeacherAttendanceFragment;
+import com.procollegia.fragments.TeacherAcademicsFragment;
 import com.procollegia.fragments.TeacherHomeFragment;
 import com.procollegia.fragments.TeacherHonorScoreFragment;
-import com.procollegia.fragments.TeacherProfileFragment;
+
 import com.procollegia.fragments.TeacherTournamentFragment;
 
 /** Teacher Dashboard - Main host activity for teachers. */
@@ -39,14 +39,14 @@ public class TeacherDashboardActivity extends AppCompatActivity {
 
             if (itemId == R.id.nav_home) {
                 selectedFragment = new TeacherHomeFragment();
-            } else if (itemId == R.id.nav_attendance) {
-                selectedFragment = new TeacherAttendanceFragment();
+            } else if (itemId == R.id.nav_academics) {
+                selectedFragment = new TeacherAcademicsFragment();
             } else if (itemId == R.id.nav_tournament) {
                 selectedFragment = new TeacherTournamentFragment();
             } else if (itemId == R.id.nav_honor_score) {
                 selectedFragment = new TeacherHonorScoreFragment();
             } else if (itemId == R.id.nav_profile) {
-                selectedFragment = new TeacherProfileFragment();
+                selectedFragment = new com.procollegia.fragments.SharedProfileFragment();
             }
 
             if (selectedFragment != null) {

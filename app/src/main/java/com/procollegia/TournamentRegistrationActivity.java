@@ -99,13 +99,18 @@ public class TournamentRegistrationActivity extends AppCompatActivity {
                 if (!qs.isEmpty()) {
                     Toast.makeText(this, "You have already registered for this tournament!", Toast.LENGTH_SHORT).show();
                 } else {
-                    proceedWithRegistration();
+                    // Fetch student name before registering
+                    db.collection("users").document(uid).get().addOnSuccessListener(doc -> {
+                        String studentName = doc.getString("name");
+                        if (studentName == null) studentName = "Unknown Student";
+                        proceedWithRegistration(studentName);
+                    }).addOnFailureListener(e -> proceedWithRegistration("Unknown Student"));
                 }
             })
             .addOnFailureListener(e -> Toast.makeText(this, "Error checking registration.", Toast.LENGTH_SHORT).show());
     }
 
-    private void proceedWithRegistration() {
+    private void proceedWithRegistration(String studentName) {
         Map<String, Object> regData = new HashMap<>();
         regData.put("tournamentId", tourneyId);
         regData.put("tournamentName", tourneyName);
@@ -120,6 +125,8 @@ public class TournamentRegistrationActivity extends AppCompatActivity {
                 return;
             }
             List<String> players = new ArrayList<>();
+            // Include the registering student as a member automatically? Or assume they typed it?
+            // Usually they type all members.
             for (EditText et : memberFields) {
                 String p = et.getText().toString().trim();
                 if (!TextUtils.isEmpty(p)) players.add(p);
@@ -131,13 +138,16 @@ public class TournamentRegistrationActivity extends AppCompatActivity {
             regData.put("teamName", teamName);
             regData.put("members", players);
             regData.put("memberCount", players.size());
+        } else {
+            // Solo game type
+            regData.put("teamName", studentName); // Use student's name for PT admin display
+            regData.put("memberCount", 1);
         }
 
         db.collection("tournaments").document(tourneyId)
                 .collection("teams").add(regData)
                 .addOnSuccessListener(ref -> {
                     // Also update counts in parent doc
-                    int pCount = "Team".equalsIgnoreCase(gameType) ? 1 : 1; // Basic increment
                     db.collection("tournaments").document(tourneyId)
                             .update("joinedCount", FieldValue.increment(1),
                                     "joinedTeamsCount", FieldValue.increment("Team".equalsIgnoreCase(gameType) ? 1 : 0));

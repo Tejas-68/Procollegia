@@ -61,7 +61,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Total Students"
+                            android:text="Students"
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
                         <TextView
@@ -78,11 +78,32 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
+                        android:gravity="center">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Max Players/Team"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/tvMaxPlayers"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="11"
+                            android:textColor="@color/accent_orange"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
                         android:gravity="end">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Total Teams"
+                            android:text="Teams"
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
                         <TextView
@@ -98,28 +119,60 @@
 
                 <!-- Management Buttons -->
                 <LinearLayout
+                    android:id="@+id/llManagementButtons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:orientation="horizontal">
-                    <Button
-                        android:id="@+id/btnIncTeams"
-                        android:layout_width="0dp"
+                    android:orientation="vertical">
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        android:text="+ Max Teams"
-                        android:textSize="11sp"
-                        style="@style/ProCollegia.Button.Outline" />
-                    <Button
-                        android:id="@+id/btnIncPlayers"
-                        android:layout_width="0dp"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+                        <Button
+                            android:id="@+id/btnDecTeams"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="4dp"
+                            android:text="- Max Teams"
+                            android:textSize="11sp"
+                            style="@style/ProCollegia.Button.Outline" />
+                        <Button
+                            android:id="@+id/btnIncTeams"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="4dp"
+                            android:text="+ Max Teams"
+                            android:textSize="11sp"
+                            style="@style/ProCollegia.Button.Outline" />
+                    </LinearLayout>
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="8dp"
-                        android:text="+ Max Players"
-                        android:textSize="11sp"
-                        style="@style/ProCollegia.Button.Outline" />
+                        android:orientation="horizontal">
+                        <Button
+                            android:id="@+id/btnDecPlayers"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="4dp"
+                            android:text="- Max Players"
+                            android:textSize="11sp"
+                            style="@style/ProCollegia.Button.Outline" />
+                        <Button
+                            android:id="@+id/btnIncPlayers"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="4dp"
+                            android:text="+ Max Players"
+                            android:textSize="11sp"
+                            style="@style/ProCollegia.Button.Outline" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 

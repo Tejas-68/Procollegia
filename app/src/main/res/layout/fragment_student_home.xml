@@ -62,6 +62,88 @@
         app:layout_constraintTop_toBottomOf="@id/llHeader"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Alumni Warning Banner -->
+    <LinearLayout
+        android:id="@+id/llAlumniWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_neumorph_card"
+        android:padding="16dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tvGreeting">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Action Required: Alumni Status"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/accent_red"/>
+            
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You have been moved to Alumni status. Your data will be deleted from the database in 30 days. Please download your data."
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginTop="4dp"/>
+            
+        <Button
+            android:id="@+id/btnDownloadAlumniData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Download Data (Excel)"
+            android:backgroundTint="@color/accent_orange"
+            android:layout_marginTop="12dp" />
+    </LinearLayout>
+
+    <!-- Internals Banner -->
+    <LinearLayout
+        android:id="@+id/llInternalsBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_neumorph_card"
+        android:padding="16dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tvGreeting">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_nav_academics"
+            android:background="@drawable/bg_neumorph_circle"
+            android:padding="8dp"
+            app:tint="@color/accent_blue" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Internals Ongoing!"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/accent_blue"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tap here to download Timetable"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
     <!-- Timetable Image -->
     <include
         android:id="@+id/includeTimetable"
@@ -70,7 +152,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/tvGreeting"
+        app:layout_constraintTop_toBottomOf="@id/llInternalsBanner"
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout

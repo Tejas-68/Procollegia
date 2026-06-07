@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/neumorph_bg"
+    android:clipToPadding="false"
+    android:paddingBottom="100dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Conduct Internals"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_neumorph_card"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:id="@+id/tvInternalsStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Internals Currently Active"
+                android:textColor="@color/accent_green"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/btnUploadTimetable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Upload Timetable (Image/PDF)"
+                android:backgroundTint="@color/accent_blue"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/btnUploadRoomAllotment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Upload Room Allotment (Optional)"
+                android:backgroundTint="@color/accent_blue"
+                android:layout_marginBottom="16dp" />
+
+            <Button
+                android:id="@+id/btnEndInternals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="End Internals"
+                android:backgroundTint="@color/accent_red"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set Maximum Marks"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_neumorph_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Apply to Year:"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="8dp" />
+
+            <Spinner
+                android:id="@+id/spMaxMarksYear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etIA1Max"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="IA 1 Max Marks"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etIA2Max"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="IA 2 Max Marks"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etAssignmentMax"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Assignment Max Marks"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btnSaveMaxMarks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save Marks"
+                android:backgroundTint="@color/accent_green" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

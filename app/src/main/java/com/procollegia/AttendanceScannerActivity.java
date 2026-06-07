@@ -110,9 +110,8 @@ public class AttendanceScannerActivity extends AppCompatActivity {
     }
 
     private synchronized void handleScan(String id) {
-        if (scannedIds.contains(id)) return; // Don't repeat process immediately
-        
-        // Match against map
+        if (scannedIds.contains(id)) return;
+
         if (uucmsMap.containsKey(id)) {
             scannedIds.add(id);
             newlyScanned.add(id);

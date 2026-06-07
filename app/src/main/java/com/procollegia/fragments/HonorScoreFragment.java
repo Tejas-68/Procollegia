@@ -202,13 +202,13 @@ public class HonorScoreFragment extends androidx.fragment.app.Fragment {
 
         // Tier badge
         if (score >= 750) {
-            tvTier.setText("★  GOLD TIER");
+            tvTier.setText("  GOLD TIER");
             tvTier.setBackgroundResource(R.drawable.bg_tier_gold);
         } else if (score >= 500) {
-            tvTier.setText("★  SILVER TIER");
+            tvTier.setText("  SILVER TIER");
             tvTier.setBackgroundResource(R.drawable.bg_tier_silver);
         } else {
-            tvTier.setText("★  BRONZE TIER");
+            tvTier.setText("  BRONZE TIER");
             tvTier.setBackgroundResource(R.drawable.bg_tier_bronze);
         }
     }

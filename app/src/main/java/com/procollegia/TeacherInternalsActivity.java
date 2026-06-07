@@ -78,7 +78,8 @@ public class TeacherInternalsActivity extends AppCompatActivity {
                     Object yearObj = d.get("year");
                     String year = yearObj != null ? String.valueOf(yearObj) : "1st Year";
                     String section = d.getString("section") != null ? d.getString("section") : "Sec A";
-                    fullList.add(new TeacherInternalsAdapter.InternalStudent(d.getId(), name, uucms, year, section));
+                    String dept = d.getString("department") != null ? d.getString("department") : "";
+                    fullList.add(new TeacherInternalsAdapter.InternalStudent(d.getId(), name, uucms, year, section, dept));
                 }
                 filterList();
             })
@@ -113,7 +114,7 @@ public class TeacherInternalsActivity extends AppCompatActivity {
         
         // Reset all marks first
         for (TeacherInternalsAdapter.InternalStudent s : filteredList) {
-            s.ia1 = 0; s.ia2 = 0; s.assignment = 0; s.attendance = 0;
+            s.ia1 = 0; s.ia2 = 0; s.assignment = 0;
         }
 
         db.collection("internals").whereEqualTo("subject", subject).get()
@@ -125,11 +126,9 @@ public class TeacherInternalsActivity extends AppCompatActivity {
                             Long ia1 = d.getLong("ia1");
                             Long ia2 = d.getLong("ia2");
                             Long assign = d.getLong("assignment");
-                            Long attend = d.getLong("attendance");
                             if (ia1 != null) s.ia1 = ia1.intValue();
                             if (ia2 != null) s.ia2 = ia2.intValue();
                             if (assign != null) s.assignment = assign.intValue();
-                            if (attend != null) s.attendance = attend.intValue();
                         }
                     }
                 }
@@ -146,7 +145,7 @@ public class TeacherInternalsActivity extends AppCompatActivity {
         }
     }
 
-    private void saveMarks(TeacherInternalsAdapter.InternalStudent student, int ia1, int ia2, int assignment, int attendance) {
+    private void saveMarks(TeacherInternalsAdapter.InternalStudent student, int ia1, int ia2, int assignment) {
         String subject = spSubject.getSelectedItem().toString();
         String docId = student.id + "_" + subject.replace(" ", "");
         
@@ -157,7 +156,8 @@ public class TeacherInternalsActivity extends AppCompatActivity {
         data.put("ia1", ia1);
         data.put("ia2", ia2);
         data.put("assignment", assignment);
-        data.put("attendance", attendance);
+        data.put("total", ia1 + ia2 + assignment);
+
         
         db.collection("internals").document(docId).set(data)
             .addOnSuccessListener(v -> Toast.makeText(this, "Saved marks for " + student.name, Toast.LENGTH_SHORT).show())

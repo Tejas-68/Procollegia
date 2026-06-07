@@ -1,6 +1,11 @@
 package com.procollegia;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import androidx.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -13,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,64 +32,187 @@ import com.procollegia.adapters.StudentAttendanceAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Calendar;
 
 public class HodTakeAttendanceActivity extends AppCompatActivity {
 
-    private Spinner spYear, spSem, spSection;
+    private static final long COOLDOWN_MS = 5 * 60 * 1000L;
+    private static final int  CUTOFF_HOUR = 17;
+
+    private List<String> periodsList = new ArrayList<>(Arrays.asList(
+        "Period 1 (08:00 – 09:00)",
+        "Period 2 (09:00 – 10:00)",
+        "Period 3 (10:00 – 11:00)",
+        "Period 4 (11:00 – 12:00)",
+        "Period 5 (13:00 – 14:00)",
+        "Period 6 (14:00 – 15:00)"
+    ));
+
+    private Spinner spPeriod, spYear, spSem, spSection;
     private EditText etSearch;
     private RecyclerView rvStudents;
-    private TextView tvSummary;
+    private TextView tvSummary, tvBanner, tvCooldown;
     private Button btnSubmit;
     private ProgressBar pbLoading;
+    private android.widget.ImageView btnConfigPeriods;
 
     private StudentAttendanceAdapter adapter;
-    private final List<StudentAttendanceAdapter.StudentAttendance> fullList = new ArrayList<>();
+    private final List<StudentAttendanceAdapter.StudentAttendance> fullList     = new ArrayList<>();
     private final List<StudentAttendanceAdapter.StudentAttendance> filteredList = new ArrayList<>();
-    
+
     private FirebaseFirestore db;
     private String uid;
-    private boolean alreadySubmitted = false;
+    private String hodDept = "";
+    private CountDownTimer cooldownTimer;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hod_take_attendance);
 
-        db = FirebaseFirestore.getInstance();
-        uid = FirebaseAuth.getInstance().getCurrentUser() != null ? FirebaseAuth.getInstance().getCurrentUser().getUid() : "HOD_MOCK";
+        db    = FirebaseFirestore.getInstance();
+        uid   = FirebaseAuth.getInstance().getUid();
+        prefs = getSharedPreferences("attendance_prefs", Context.MODE_PRIVATE);
 
-        spYear     = findViewById(R.id.spinnerYear);
-        spSem      = findViewById(R.id.spinnerSem);
-        spSection  = findViewById(R.id.spinnerSection);
-        etSearch   = findViewById(R.id.etSearchStudent);
-        rvStudents = findViewById(R.id.rvStudentAttendance);
-        tvSummary  = findViewById(R.id.tvAttendanceSummary);
-        btnSubmit  = findViewById(R.id.btnSubmitAttendance);
-        pbLoading  = findViewById(R.id.pbLoading);
+        spPeriod         = findViewById(R.id.spinnerPeriod);
+        spYear           = findViewById(R.id.spinnerYear);
+        spSem            = findViewById(R.id.spinnerSem);
+        spSection        = findViewById(R.id.spinnerSection);
+        etSearch         = findViewById(R.id.etSearchStudent);
+        rvStudents       = findViewById(R.id.rvStudentAttendance);
+        tvSummary        = findViewById(R.id.tvAttendanceSummary);
+        btnSubmit        = findViewById(R.id.btnSubmitAttendance);
+        pbLoading        = findViewById(R.id.pbLoading);
+        tvBanner         = findViewById(R.id.tvBanner);
+        tvCooldown       = findViewById(R.id.tvCooldown);
+        btnConfigPeriods = findViewById(R.id.btnConfigPeriods);
 
         rvStudents.setLayoutManager(new LinearLayoutManager(this));
-
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        findViewById(R.id.btnScan).setOnClickListener(v -> startScanner());
         btnSubmit.setOnClickListener(v -> submitAttendance());
+        
+        btnConfigPeriods.setOnClickListener(v -> showPeriodConfigDialog());
 
         setupSpinners();
         setupSearch();
-
-        // Temporarily removed the simulated auto-selection so HODs see all active students default to 'All Years' & 'All Sections' to verify syncing.
-        // simulateHodTimetableContext();
-
-        loadStudentsWithLeaves();
+        checkCutoff();
+        
+        db.collection("users").document(uid).get().addOnSuccessListener(d -> {
+            if (d.exists()) {
+                hodDept = d.getString("hodDepartment");
+                if (hodDept == null) hodDept = d.getString("department");
+                if (hodDept == null) hodDept = "";
+                loadPeriods();
+                loadStudentsWithLeaves();
+            }
+        });
     }
 
+    private void loadPeriods() {
+        if (hodDept.isEmpty()) return;
+        db.collection("departmentSettings").document(hodDept).get().addOnSuccessListener(d -> {
+            if (d.exists() && d.contains("periods")) {
+                List<String> fetched = (List<String>) d.get("periods");
+                if (fetched != null && !fetched.isEmpty()) {
+                    periodsList.clear();
+                    periodsList.addAll(fetched);
+                    updatePeriodSpinner();
+                }
+            }
+        });
+    }
+
+    private void showPeriodConfigDialog() {
+        EditText input = new EditText(this);
+        input.setHint("e.g. Period 1 (08:00 - 09:00)");
+        
+        new AlertDialog.Builder(this)
+            .setTitle("Add New Period")
+            .setMessage("Enter the period name and time range. It will be used for auto-selection if it contains times like 'HH:mm - HH:mm'.")
+            .setView(input)
+            .setPositiveButton("Add", (d, w) -> {
+                String val = input.getText().toString().trim();
+                if (!val.isEmpty()) {
+                    periodsList.add(val);
+                    savePeriods();
+                }
+            })
+            .setNeutralButton("Clear All", (d, w) -> {
+                periodsList.clear();
+                savePeriods();
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
+    }
+
+    private void savePeriods() {
+        if (hodDept.isEmpty()) return;
+        Map<String, Object> map = new HashMap<>();
+        map.put("periods", periodsList);
+        db.collection("departmentSettings").document(hodDept)
+            .set(map, com.google.firebase.firestore.SetOptions.merge())
+            .addOnSuccessListener(aVoid -> {
+                Toast.makeText(this, "Periods updated", Toast.LENGTH_SHORT).show();
+                updatePeriodSpinner();
+            });
+    }
+
+    private void updatePeriodSpinner() {
+        spPeriod.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, periodsList));
+        autoSelectCurrentPeriod();
+    }
+
+    private void autoSelectCurrentPeriod() {
+        try {
+            int currentMinutes = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 60 + Calendar.getInstance().get(Calendar.MINUTE);
+            for (int i = 0; i < periodsList.size(); i++) {
+                String p = periodsList.get(i);
+                // Look for pattern HH:mm - HH:mm or HH:mm – HH:mm
+                java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d{1,2}):(\\d{2})\\s*[-–]\\s*(\\d{1,2}):(\\d{2})").matcher(p);
+                if (m.find()) {
+                    int startH = Integer.parseInt(m.group(1)), startM = Integer.parseInt(m.group(2));
+                    int endH = Integer.parseInt(m.group(3)), endM = Integer.parseInt(m.group(4));
+                    int startTotal = startH * 60 + startM;
+                    int endTotal = endH * 60 + endM;
+                    if (currentMinutes >= startTotal && currentMinutes <= endTotal) {
+                        spPeriod.setSelection(i);
+                        break;
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (cooldownTimer != null) cooldownTimer.cancel();
+    }
+
+    // ── Spinners ──────────────────────────────────────────────────────────────
     private void setupSpinners() {
-        String[] years    = {"All Years", "1st Year", "2nd Year", "3rd Year"};
-        String[] sems     = {"All Sems", "I Sem", "II Sem", "III Sem", "IV Sem", "V Sem", "VI Sem"};
-        String[] sections = {"All Sections", "Sec A", "Sec B", "Sec C"};
+        spPeriod.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item, periodsList));
+        autoSelectCurrentPeriod();
+        spPeriod.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> p, View v, int i, long l) {
+                if (cooldownTimer != null) cooldownTimer.cancel();
+                checkSubmitState();
+            }
+            @Override public void onNothingSelected(AdapterView<?> p) {}
+        });
+
+        String[] years    = {"All Years", "1", "2", "3"};
+        String[] sems     = {"All Sems", "1", "2", "3", "4", "5", "6"};
+        String[] sections = {"All Sections", "A", "B", "C"};
 
         spYear.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, years));
         spSem.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, sems));
@@ -98,76 +227,125 @@ public class HodTakeAttendanceActivity extends AppCompatActivity {
         spSection.setOnItemSelectedListener(listen);
     }
 
-    private void simulateHodTimetableContext() {
-        // Here we mock the logic where the HOD's scheduled timetable automatically
-        // selects the class they are supposed to be teaching right now. 
-        // Example: 2nd Year, IV Sem, Sec A
-        spYear.setSelection(2); // 2nd Year
-        spSem.setSelection(4);  // IV Sem
-        spSection.setSelection(1); // Sec A
-    }
-
     private void setupSearch() {
         etSearch.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { filterList(); }
+            @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
+            @Override public void onTextChanged(CharSequence s, int a, int b, int c) { filterList(); }
             @Override public void afterTextChanged(Editable s) {}
         });
     }
 
-    private void loadStudentsWithLeaves() {
-        if (!fullList.isEmpty()) {
-            checkLeavesForToday();
-            return;
-        }
+    // ── Cutoff & cooldown ─────────────────────────────────────────────────────
+    private boolean isPastCutoff() {
+        int hour = Integer.parseInt(new SimpleDateFormat("HH", Locale.getDefault()).format(new Date()));
+        return hour >= CUTOFF_HOUR;
+    }
 
+    private void checkCutoff() {
+        if (isPastCutoff()) {
+            tvBanner.setVisibility(View.VISIBLE);
+            tvBanner.setTextColor(ContextCompat.getColor(this, R.color.accent_red));
+            tvBanner.setText("Attendance is disabled after 5:00 PM");
+            btnSubmit.setEnabled(false);
+            btnSubmit.setText("Disabled after 5 PM");
+            btnSubmit.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.text_muted));
+        }
+    }
+
+    private String getCooldownKey() {
+        String today  = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        String period = "P" + (spPeriod.getSelectedItemPosition() + 1);
+        return uid + "_hod_" + today + "_" + period;
+    }
+
+    private void checkSubmitState() {
+        if (isPastCutoff()) return;
+        long submitTime = prefs.getLong(getCooldownKey(), 0L);
+        long now = System.currentTimeMillis();
+        long elapsed = now - submitTime;
+
+        if (submitTime > 0 && elapsed < COOLDOWN_MS) {
+            lockForCooldown(COOLDOWN_MS - elapsed);
+        } else if (submitTime > 0) {
+            enableResubmit();
+        } else {
+            resetSubmitButton();
+        }
+    }
+
+    private void lockForCooldown(long remainingMs) {
+        btnSubmit.setEnabled(false);
+        tvCooldown.setVisibility(View.VISIBLE);
+        tvBanner.setVisibility(View.VISIBLE);
+        tvBanner.setTextColor(ContextCompat.getColor(this, R.color.accent_orange));
+        tvBanner.setText("Attendance submitted. Re-submit available after cooldown.");
+        if (cooldownTimer != null) cooldownTimer.cancel();
+        cooldownTimer = new CountDownTimer(remainingMs, 1000) {
+            @Override public void onTick(long ms) {
+                tvCooldown.setText(String.format(Locale.getDefault(),
+                        "Re-submit in %d:%02d", ms / 60000, (ms % 60000) / 1000));
+            }
+            @Override public void onFinish() { enableResubmit(); }
+        }.start();
+    }
+
+    private void enableResubmit() {
+        tvCooldown.setVisibility(View.GONE);
+        tvBanner.setVisibility(View.VISIBLE);
+        tvBanner.setTextColor(ContextCompat.getColor(this, R.color.accent_green));
+        tvBanner.setText("Cooldown over. You can now re-submit attendance.");
+        btnSubmit.setEnabled(true);
+        btnSubmit.setText("Re-submit Attendance");
+        btnSubmit.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.accent_blue));
+    }
+
+    private void resetSubmitButton() {
+        tvCooldown.setVisibility(View.GONE);
+        tvBanner.setVisibility(View.GONE);
+        btnSubmit.setEnabled(true);
+        btnSubmit.setText("Submit Attendance");
+        btnSubmit.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.accent_blue));
+    }
+
+    // ── Student loading ───────────────────────────────────────────────────────
+    private void loadStudentsWithLeaves() {
+        if (!fullList.isEmpty()) { checkLeavesForToday(); return; }
         pbLoading.setVisibility(View.VISIBLE);
-        db.collection("users").whereIn("role", java.util.Arrays.asList("Student", "student")).get()
+        db.collection("users").whereIn("role", Arrays.asList("Student", "student")).get()
             .addOnSuccessListener(qs -> {
                 if (isFinishing() || isDestroyed()) return;
                 fullList.clear();
                 for (QueryDocumentSnapshot d : qs) {
                     try {
-                        String name     = d.getString("name");
-                        String uucms    = d.getString("uucmsId");
-                        Object yearObj  = d.get("year"); 
-                        String year     = (yearObj != null) ? String.valueOf(yearObj) : "";
-                        String sem      = d.getString("semester");
-                        String section  = d.getString("section");
-
-                        StudentAttendanceAdapter.StudentAttendance student = new StudentAttendanceAdapter.StudentAttendance(
-                                d.getId(),
-                                name,
-                                uucms,
-                                year,
-                                section != null ? section : "Sec A"
-                        );
-                        // We loosely bind semester dynamically or parse it 
-                        // To keep it clean, we just use year/section logic + semester match below if we extend StudentAttendance model.
-                        // Currently adapter doesn't store Sem, so we just add the item.
-                        fullList.add(student);
-                    } catch (Exception e) {}
+                        String name    = d.getString("name");
+                        String uucms   = d.getString("uucmsId");
+                        Object yearObj = d.get("year");
+                        String year    = (yearObj != null) ? String.valueOf(yearObj) : "";
+                        String section = d.getString("section");
+                        fullList.add(new StudentAttendanceAdapter.StudentAttendance(
+                                d.getId(), name, uucms, year,
+                                section != null ? section : "A"
+                        ));
+                    } catch (Exception ignored) {}
                 }
                 checkLeavesForToday();
+                checkSubmitState();
             })
-            .addOnFailureListener(e -> {
-                if (isFinishing() || isDestroyed()) return;
-                checkLeavesForToday();
-            });
+            .addOnFailureListener(e -> { if (!isDestroyed()) checkLeavesForToday(); });
     }
 
     private void checkLeavesForToday() {
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        db.collection("leaveRequests")
-            .whereEqualTo("status", "approved")
-            .get()
+        db.collection("leaveRequests").whereEqualTo("status", "approved").get()
             .addOnSuccessListener(qs -> {
                 if (isFinishing() || isDestroyed()) return;
                 for (QueryDocumentSnapshot d : qs) {
-                    String dateFrom = d.getString("dateFrom");
-                    String dateTo = d.getString("dateTo");
-                    if (dateFrom != null && dateTo != null && today.compareTo(dateFrom) >= 0 && today.compareTo(dateTo) <= 0) {
-                        String studentId = d.getString("studentId");
+                    String dateFrom  = d.getString("dateFrom");
+                    String dateTo    = d.getString("dateTo");
+                    String studentId = d.getString("studentId");
+                    if (dateFrom != null && dateTo != null
+                            && today.compareTo(dateFrom) >= 0
+                            && today.compareTo(dateTo) <= 0) {
                         for (StudentAttendanceAdapter.StudentAttendance s : fullList) {
                             if (s.id != null && s.id.equals(studentId)) s.isOnLeave = true;
                         }
@@ -177,39 +355,28 @@ public class HodTakeAttendanceActivity extends AppCompatActivity {
                 filterList();
             })
             .addOnFailureListener(e -> {
-                if (isFinishing() || isDestroyed()) return;
-                pbLoading.setVisibility(View.GONE);
-                filterList();
+                if (!isDestroyed()) { pbLoading.setVisibility(View.GONE); filterList(); }
             });
     }
 
+    // ── Filter ────────────────────────────────────────────────────────────────
     private void filterList() {
-        if (spYear.getSelectedItem() == null || spSem.getSelectedItem() == null || spSection.getSelectedItem() == null) return;
-
+        if (spYear.getSelectedItem() == null || spSection.getSelectedItem() == null) return;
         String year  = spYear.getSelectedItem().toString();
-        String sem   = spSem.getSelectedItem().toString(); // Currently ignored in list model but UI exists
         String sec   = spSection.getSelectedItem().toString();
-        String query = etSearch.getText().toString().toLowerCase();
+        String query = etSearch.getText().toString().toLowerCase().trim();
 
         filteredList.clear();
         for (StudentAttendanceAdapter.StudentAttendance s : fullList) {
-            boolean matchesYear = year.equals("All Years") || (s.year != null && 
-                    (s.year.equals(year) || 
-                     s.year.startsWith(String.valueOf(year.charAt(0))) ||
-                     (year.startsWith("1") && s.year.contains("I")) ||
-                     (year.startsWith("2") && s.year.contains("II")) ||
-                     (year.startsWith("3") && s.year.contains("III"))));
-            
+            boolean matchY = year.equals("All Years") || (s.year != null &&
+                    (s.year.equals(year) || s.year.startsWith(year.substring(0, 1))));
             String sSec = (s.section != null) ? s.section.toLowerCase() : "";
-            boolean matchesSec = sec.equals("All Sections") || sSec.contains(sec.toLowerCase().replace("sec ", ""));
-
+            boolean matchS = sec.equals("All Sections") ||
+                    sSec.contains(sec.toLowerCase().replace("sec ", ""));
             String name = (s.name != null) ? s.name.toLowerCase() : "";
             String code = (s.uucmsId != null) ? s.uucmsId.toLowerCase() : "";
-            boolean matchesQuery = query.isEmpty() || name.contains(query) || code.contains(query);
-
-            if (matchesYear && matchesSec && matchesQuery) {
-                filteredList.add(s);
-            }
+            boolean matchQ = query.isEmpty() || name.contains(query) || code.contains(query);
+            if (matchY && matchS && matchQ) filteredList.add(s);
         }
 
         if (adapter == null) {
@@ -230,39 +397,107 @@ public class HodTakeAttendanceActivity extends AppCompatActivity {
         tvSummary.setText(String.format("Present: %d | Absent: %d", p, a));
     }
 
+    // ── Submit ────────────────────────────────────────────────────────────────
     private void submitAttendance() {
-        if (alreadySubmitted) return;
+        if (isPastCutoff()) {
+            Toast.makeText(this, "Attendance is closed after 5 PM.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (filteredList.isEmpty()) {
             Toast.makeText(this, "No students to submit.", Toast.LENGTH_SHORT).show();
             return;
         }
-        String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        String date   = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        String period = "P" + (spPeriod.getSelectedItemPosition() + 1);
 
-        // BUG 4 FIX: batch-write one record per student, with HOD override flag
         WriteBatch batch = db.batch();
         for (StudentAttendanceAdapter.StudentAttendance s : filteredList) {
+            String docId = s.id + "_" + date + "_" + period + "_hod";
             Map<String, Object> rec = new HashMap<>();
             rec.put("studentId",  s.id);
             rec.put("name",       s.name);
             rec.put("uucmsId",    s.uucmsId);
-            rec.put("status",     s.status);       // "P", "A", or "L"
+            rec.put("year",       s.year);
+            rec.put("section",    s.section);
+            rec.put("status",     s.status);
             rec.put("isOnLeave",  s.isOnLeave);
             rec.put("date",       date);
+            rec.put("period",     period);
             rec.put("hodUid",     uid);
-            rec.put("override",   true);           // HOD override flag preserved
+            rec.put("override",   true);
             rec.put("timestamp",  new Date());
-            batch.set(db.collection("attendanceRecords").document(), rec);
+            batch.set(db.collection("attendanceRecords").document(docId), rec);
         }
 
         btnSubmit.setEnabled(false);
-        batch.commit().addOnSuccessListener(aVoid -> {
-            alreadySubmitted = true;
-            btnSubmit.setText("Departmental Attendance Recorded");
-            btnSubmit.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.text_muted));
-            Toast.makeText(this, "Attendance Overwritten by HOD Successfully", Toast.LENGTH_SHORT).show();
-        }).addOnFailureListener(e -> {
-            btnSubmit.setEnabled(true);
-            Toast.makeText(this, "Submit failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        });
+        batch.commit()
+            .addOnSuccessListener(aVoid -> {
+                prefs.edit().putLong(getCooldownKey(), System.currentTimeMillis()).apply();
+
+                int absentCount = 0;
+                List<String> absentNames = new ArrayList<>();
+                for (StudentAttendanceAdapter.StudentAttendance s : filteredList) {
+                    if ("A".equals(s.status) && !s.isOnLeave) {
+                        absentCount++;
+                        if (absentNames.size() < 10) absentNames.add(s.name != null ? s.name : "Unknown");
+                    }
+                }
+                showAbsentSummary(period, absentCount, absentNames);
+                lockForCooldown(COOLDOWN_MS);
+            })
+            .addOnFailureListener(e -> {
+                btnSubmit.setEnabled(true);
+                Toast.makeText(this, "Submit failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            });
+    }
+
+    private void showAbsentSummary(String period, int absentCount, List<String> absentNames) {
+        if (isFinishing() || isDestroyed()) return;
+        StringBuilder msg = new StringBuilder("Attendance submitted for ").append(period).append(".\n\n");
+        if (absentCount == 0) {
+            msg.append("All students are present!");
+        } else {
+            msg.append(absentCount).append(" student(s) absent:\n");
+            for (String n : absentNames) msg.append("• ").append(n).append("\n");
+            if (absentCount > absentNames.size())
+                msg.append("...and ").append(absentCount - absentNames.size()).append(" more.");
+            msg.append("\n\nYou can modify and re-submit after the 5-minute cooldown.");
+        }
+        new AlertDialog.Builder(this)
+            .setTitle("Attendance Submitted")
+            .setMessage(msg.toString())
+            .setPositiveButton("OK", null)
+            .show();
+    }
+
+    private void startScanner() {
+        if (fullList.isEmpty()) {
+            Toast.makeText(this, "No students to scan", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        HashMap<String, String> uucmsMap = new HashMap<>();
+        for (StudentAttendanceAdapter.StudentAttendance s : fullList) {
+            if (s.uucmsId != null) uucmsMap.put(s.uucmsId, s.name);
+        }
+        Intent intent = new Intent(this, com.procollegia.AttendanceScannerActivity.class);
+        intent.putExtra("uucmsMap", uucmsMap);
+        startActivityForResult(intent, 101);
+    }
+
+    @Override
+    protected void onActivityResult(int req, int res, @Nullable Intent d) {
+        super.onActivityResult(req, res, d);
+        if (req == 101 && android.app.Activity.RESULT_OK == res && d != null) {
+            ArrayList<String> scanned = d.getStringArrayListExtra("scanned");
+            if (scanned != null) {
+                for (String uucms : scanned) {
+                    for (StudentAttendanceAdapter.StudentAttendance s : fullList) {
+                        if (uucms.equals(s.uucmsId)) s.status = "P";
+                    }
+                }
+                filterList();
+                Toast.makeText(this, "Marked " + scanned.size() + " students present", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

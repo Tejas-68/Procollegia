@@ -211,10 +211,10 @@ public class TeacherHonorScoreFragment extends Fragment {
 
     private void updateTierBadge(int score) {
         // Since baseline is 500, update tier ranges to be more realistic
-        if (score > 1200) { tvTier.setText("💎 Diamond"); tvTier.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.accent_purple)); }
-        else if (score > 800) { tvTier.setText("🥇 Gold"); tvTier.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.accent_gold)); }
-        else if (score >= 500) { tvTier.setText("🥈 Silver"); tvTier.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.neumorph_shadow_dark)); }
-        else { tvTier.setText("🥉 Bronze"); tvTier.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.accent_orange)); }
+        if (score > 1200) { tvTier.setText(" Diamond"); tvTier.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.accent_purple)); }
+        else if (score > 800) { tvTier.setText(" Gold"); tvTier.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.accent_gold)); }
+        else if (score >= 500) { tvTier.setText(" Silver"); tvTier.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.neumorph_shadow_dark)); }
+        else { tvTier.setText(" Bronze"); tvTier.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.accent_orange)); }
     }
 
     private void setupReasonSpinner() {

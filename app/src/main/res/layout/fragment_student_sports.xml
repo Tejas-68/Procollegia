@@ -42,7 +42,7 @@
             android:layout_height="52dp"
             android:gravity="center"
             android:textSize="26sp"
-            android:text="⚽"
+            android:text=""
             android:background="@drawable/bg_neumorph_circle" />
     </LinearLayout>
 

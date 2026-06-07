@@ -31,7 +31,7 @@ public class TournamentAdapter extends RecyclerView.Adapter<TournamentAdapter.VH
         public TournamentItem(String id, String n, String t, String d, String v, String s) {
             this.id = id; this.name = n; this.type = t; this.date = d; this.venue = v; this.status = s;
             this.isLive = "ongoing".equalsIgnoreCase(s);
-            this.emoji = "🏆"; this.teams = "—"; this.prize = "Trophy";
+            this.emoji = ""; this.teams = "—"; this.prize = "Trophy";
             this.gameType = "Solo"; this.maxPlayers = 1;
         }
     }

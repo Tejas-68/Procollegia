@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 import android.widget.Toast;
 
+import android.widget.AdapterView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -22,7 +23,7 @@ import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private TextView tabPersonal, tabAcademic;
+    private TextView tabPersonal, tabAcademic, tvYearLabel;
     private ViewFlipper viewFlipper;
     private Spinner spinnerRole, spinnerYear;
     private Button btnNext, btnPrev, btnSubmit;
@@ -61,6 +62,31 @@ public class RegisterActivity extends AppCompatActivity {
         etSem = findViewById(R.id.etSem);
         etLoginCode = findViewById(R.id.etLoginCode);
         progressRegister = findViewById(R.id.progressRegister);
+        tvYearLabel = findViewById(R.id.tvYearLabel);
+
+        // Dynamic Role UI changes
+        spinnerRole.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String role = parent.getItemAtPosition(position).toString();
+                if (role.equals("Student")) {
+                    etUucms.setHint("UUCMS ID (e.g. U11SZ23S0189) *");
+                    etCourse.setHint("Course (BCA, BBA...)");
+                    tvYearLabel.setVisibility(View.VISIBLE);
+                    spinnerYear.setVisibility(View.VISIBLE);
+                    etSem.setVisibility(View.VISIBLE);
+                } else {
+                    etUucms.setHint("Employee ID *");
+                    etCourse.setHint("Department (BCA, BCOM...)");
+                    tvYearLabel.setVisibility(View.GONE);
+                    spinnerYear.setVisibility(View.GONE);
+                    etSem.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
 
         // Smooth animations
@@ -115,7 +141,36 @@ public class RegisterActivity extends AppCompatActivity {
             btnSubmit.setEnabled(false);
             btnPrev.setEnabled(false);
 
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+            if (selectedRole.equals("Teacher")) {
+                FirebaseFirestore.getInstance().collection("users")
+                    .whereEqualTo("role", "Teacher")
+                    .whereEqualTo("email", email)
+                    .get()
+                    .addOnSuccessListener(qs -> {
+                        if (!qs.isEmpty()) {
+                            com.google.firebase.firestore.DocumentSnapshot mockDoc = qs.getDocuments().get(0);
+                            performRegistration(email, password, name, phone, selectedRole, uucms, course, selectedYear, sem, mockDoc);
+                        } else {
+                            progressRegister.setVisibility(View.GONE);
+                            btnSubmit.setEnabled(true);
+                            btnPrev.setEnabled(true);
+                            Toast.makeText(RegisterActivity.this, "Email not recognized. Please ask HOD to add you first.", Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        progressRegister.setVisibility(View.GONE);
+                        btnSubmit.setEnabled(true);
+                        btnPrev.setEnabled(true);
+                        Toast.makeText(RegisterActivity.this, "Error checking approval: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    });
+            } else {
+                performRegistration(email, password, name, phone, selectedRole, uucms, course, selectedYear, sem, null);
+            }
+        });
+    }
+
+    private void performRegistration(String email, String password, String name, String phone, String selectedRole, String uucms, String course, String selectedYear, String sem, com.google.firebase.firestore.DocumentSnapshot mockDoc) {
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         String uid = task.getResult().getUser().getUid();
@@ -128,15 +183,23 @@ public class RegisterActivity extends AppCompatActivity {
                         userMap.put("role", selectedRole);
                         userMap.put("uucmsId", uucms);
                         userMap.put("department", course);
-                        userMap.put("year", selectedYear);
-                        userMap.put("semester", sem);
-                        userMap.put("section", "Sec A");
-
+                        
                         if (selectedRole.equals("Student")) {
-                            userMap.put("honorScore", 500);}
+                            userMap.put("year", selectedYear);
+                            userMap.put("semester", sem);
+                            userMap.put("section", "Sec A"); // Can make dynamic later
+                            userMap.put("honorScore", 500);
+                        }
+                        
+                        if (mockDoc != null && mockDoc.contains("assignedSubjects")) {
+                            userMap.put("assignedSubjects", mockDoc.get("assignedSubjects"));
+                        }
 
                         FirebaseFirestore.getInstance().collection("users").document(uid).set(userMap)
                             .addOnSuccessListener(aVoid -> {
+                                if (mockDoc != null) {
+                                    mockDoc.getReference().delete();
+                                }
                                 progressRegister.setVisibility(View.GONE);
                                 Toast.makeText(RegisterActivity.this, "Successfully registered!", Toast.LENGTH_SHORT).show();
                                 
@@ -169,7 +232,6 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
-        });
     }
 
     private void switchToPersonal() {

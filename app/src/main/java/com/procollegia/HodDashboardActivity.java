@@ -11,7 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import com.procollegia.fragments.HodHomeFragment;
 import com.procollegia.fragments.HodAcademicsFragment;
 import com.procollegia.fragments.HodHonorScoreFragment;
-import com.procollegia.fragments.HodProfileFragment;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HodDashboardActivity extends AppCompatActivity {
@@ -36,10 +36,12 @@ public class HodDashboardActivity extends AppCompatActivity {
                 selectedFragment = new HodHomeFragment();
             } else if (id == R.id.nav_hod_academics) {
                 selectedFragment = new HodAcademicsFragment();
+            } else if (id == R.id.nav_hod_tournament) {
+                selectedFragment = new com.procollegia.fragments.TeacherTournamentFragment();
             } else if (id == R.id.nav_hod_honor) {
                 selectedFragment = new HodHonorScoreFragment();
             } else if (id == R.id.nav_hod_profile) {
-                selectedFragment = new HodProfileFragment();
+                selectedFragment = new com.procollegia.fragments.SharedProfileFragment();
             }
 
             if (selectedFragment != null) {

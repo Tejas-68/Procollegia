@@ -105,7 +105,17 @@ public class StudentAttendanceAdapter extends RecyclerView.Adapter<StudentAttend
         tv.setTextColor(Color.WHITE);
     }
 
+    /** Marks every non-leave student as the given status ("P" or "A") and refreshes. */
+    public void selectAll(String status) {
+        for (StudentAttendance s : list) {
+            if (!s.isOnLeave) s.status = status;
+        }
+        notifyDataSetChanged();
+        if (callback != null) callback.onUpdate();
+    }
+
     @Override public int getItemCount() { return list.size(); }
+
 
     static class VH extends RecyclerView.ViewHolder {
         TextView tvName, tvRoll, tvP, tvA, tvOnLeave;

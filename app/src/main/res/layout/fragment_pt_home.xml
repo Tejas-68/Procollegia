@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/neumorph_bg"
+    android:background="@color/neumorph_bg">
+
+<androidx.core.widget.NestedScrollView 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:clipToPadding="false"
     android:paddingBottom="100dp">
 
@@ -135,3 +139,16 @@
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
+
+    <!-- Camera FAB for PT Attendance -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabScanAttendance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="24dp"
+        android:src="@drawable/ic_camera"
+        app:tint="@color/text_on_accent"
+        app:backgroundTint="@color/accent_blue" />
+
+</FrameLayout>

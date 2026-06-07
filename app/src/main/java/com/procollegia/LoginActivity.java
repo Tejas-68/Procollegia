@@ -17,7 +17,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
     private Button btnLogin;
-    private android.widget.TextView tvRegister;
+    private android.widget.TextView tvRegister, tvForgotPassword;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
 
@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         tvRegister = findViewById(R.id.tvRegister);
+        tvForgotPassword = findViewById(R.id.tvForgotPassword);
         progressBar = findViewById(R.id.progressBar);
 
         btnLogin.setOnClickListener(v -> loginUser());
@@ -39,6 +40,64 @@ public class LoginActivity extends AppCompatActivity {
         tvRegister.setOnClickListener(v -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
+
+        tvForgotPassword.setOnClickListener(v -> showForgotPasswordDialog());
+    }
+
+    private void showForgotPasswordDialog() {
+        android.widget.EditText input = new android.widget.EditText(this);
+        input.setHint("Enter Email or UUCMS ID");
+        int pad = (int) (16 * getResources().getDisplayMetrics().density);
+        input.setPadding(pad, pad, pad, pad);
+
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Reset Password")
+            .setMessage("Enter your Email or UUCMS ID to receive a password reset link.")
+            .setView(input)
+            .setPositiveButton("Send Reset Link", (dialog, which) -> {
+                String inputStr = input.getText().toString().trim();
+                if (inputStr.isEmpty()) {
+                    Toast.makeText(this, "Please enter your Email or ID", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                
+                progressBar.setVisibility(View.VISIBLE);
+                if (!inputStr.contains("@")) {
+                    FirebaseFirestore.getInstance().collection("users")
+                        .whereEqualTo("uucmsId", inputStr)
+                        .limit(1)
+                        .get()
+                        .addOnSuccessListener(qs -> {
+                            if (!qs.isEmpty()) {
+                                String email = qs.getDocuments().get(0).getString("email");
+                                if (email != null && !email.isEmpty()) {
+                                    sendResetEmail(email);
+                                } else {
+                                    showLoginError("No email associated with this UUCMS ID");
+                                }
+                            } else {
+                                showLoginError("UUCMS ID not found");
+                            }
+                        })
+                        .addOnFailureListener(e -> showLoginError("Lookup failed: " + e.getMessage()));
+                } else {
+                    sendResetEmail(inputStr);
+                }
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
+    }
+
+    private void sendResetEmail(String email) {
+        mAuth.sendPasswordResetEmail(email)
+            .addOnCompleteListener(task -> {
+                progressBar.setVisibility(View.GONE);
+                if (task.isSuccessful()) {
+                    Toast.makeText(LoginActivity.this, "Password reset email sent to " + email, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Error sending reset email: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
     }
 
     private void loginUser() {

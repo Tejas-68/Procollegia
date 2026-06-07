@@ -45,7 +45,7 @@
         android:padding="48dp"
         android:visibility="gone">
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="🏆" android:textSize="48sp" android:layout_marginBottom="12dp"/>
+            android:text="" android:textSize="48sp" android:layout_marginBottom="12dp"/>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="No tournaments right now"
             android:textColor="@color/text_primary" android:textSize="16sp" android:textStyle="bold"/>
